@@ -2,15 +2,26 @@ import csv
 
 from databases.QSet import QSet
 from databases.Range import Range
+import pandas as pd
+import json
 
 
 class QLibrary:
-    # this script will do the following.
-    questions = list()
+    def __init__(self):
+        json.load("questions.json")
 
-    def addQLibrary(self, question, r):
+
+
+
+
+
+class QLibrary2:
+    # this script will do the following.
+    questions = dict()
+
+    def addQLibrary(self, questionset, question, r):
         # adds a question to the QLibrary with the given range.
-        list.append(question, r)
+        self.questions.append(question, r)
         pass
 
     def removeQLibrary(self, question):
@@ -25,6 +36,7 @@ class QLibrary:
         return QSet(i)
         pass
 
+
     range0 = Range(["Novice", "Experienced"])
     set0 = QSet("Are you a Novice or Experienced investor?", range0)
 
@@ -34,5 +46,32 @@ class QLibrary:
         elif i == 0:
             return self.set0
         else:
-            return self.questionSet(self, self.i)
+            return self.questionSet(i)
         pass
+
+
+class QLibrary:
+    def __init__(self):
+        df = pd.read_csv("questions.csv")
+    def addSet(self, tag, qDict):
+        class Question:
+
+
+class Question:
+    def __init__(self,question, qRange):
+        self.question: str = question
+        self.qRange: Ranges = qRange
+
+class Ranges:
+    @
+    def __init__(self, listRange):
+
+        self.listRange = listRange
+        pass
+
+    def toString(self):
+        st = ""
+        for options in self.listRange:
+            st += options + ", "
+        return st
+    pass

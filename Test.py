@@ -1,3 +1,4 @@
+from SelectorFetcher.Selector import Selector
 from databases.QLibrary import QLibrary
 
 
@@ -6,6 +7,8 @@ class Test:
         self.lib: QLibrary = QLibrary()
         self.i = 0
         self.solutionSet = list()
+        sel = Selector([])
+        print("\n")
         print("Answer the following questions and type exit whenever you want to stop\n")
         while self.i != "exit":
             self.qset = self.lib.set(self.i)
