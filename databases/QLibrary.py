@@ -28,18 +28,26 @@ class Question:
 
 
 class QSet:
-    def __init__(self):
-        pass
+    @dispatch(str, int, list)
+    def __init__(self, name, priority, ques):
+        self.ques: list = ques
+        self.name: str = name
+        self.priority: int = priority
+
+    @dispatch(str, int)
+    def __init__(self, name, priority):
+        self.name: str = name
+        self.priority: int = priority
 
 
 class QLibrary:
     def __init__(self):
         df = pd.read_csv("questions.csv")
 
-    def add(self, question, options):
+    def add(self, qset):
         pass
 
-    def replace(self, old_question, new_question, new_options):
+    def replace(self, qset_name, old_question, new_question, new_range):
         pass
 
     def find(self, question):
@@ -48,10 +56,12 @@ class QLibrary:
     def display(self):
         pass
 
-    def get(self):
+    @dispatch(str)
+    def remove(self, question):
         pass
 
-    def remove(self):
+    @dispatch(QSet)
+    def remove(self, question):
         pass
 
     def exists(self):
