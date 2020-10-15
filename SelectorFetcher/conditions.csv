@@ -1,0 +1,25 @@
+Tag / Key,Condition
+high,15
+medium,10
+low,5
+novice,novice
+experienced,experienced
+tech,CSIT
+airlines,AIR
+cars,AUTO
+pharma,CANNABIS
+conglomerates,CONG
+defence,DEFAERO
+energy,ENERGY
+etf,ETF
+finserv,FINSERV
+consumer,FMCG
+food,FOOD
+beverages,FOODCANN
+arms,GUN
+manufacturing,MANU
+oil,OIL
+packaging,PACK
+pharma,PHARMA
+tobacco,TOBACCO
+retail,RETAIL
