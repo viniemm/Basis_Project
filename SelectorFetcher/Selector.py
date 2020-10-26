@@ -1,13 +1,14 @@
 import pandas as pd
 
+dow = pd.read_csv("dow30.csv")
+port = dict()
+t = ["mei","tech"]
+def __init__(tags):
+    i = 0
+    while i<dow.size:
+        for x in tags:
+            if x in dow["Tags"][i]:
+                print(x)
+        i+=1
 
-class Selector:
-    def __init__(self, con):
-        finalCons = list()
-        df = pd.read_csv("C:/Users/vinay/Documents/Basis_Project/SelectorFetcher/conditions.csv")
-        print(df)
-        for x in con:
-            if x in df:
-                pass
-        for index, row in df.iterrows():
-            print(index,row["tag"])
+__init__(t)

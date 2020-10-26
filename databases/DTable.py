@@ -1,4 +1,11 @@
-def get(ticker):
+import pandas as pd
+import numpy as np
+import matplotlib as plt
+import yfinance as yf
+
+
+def get(ticker) -> dict:
+    stock = yf.Ticker(ticker)
     pass
 
 
@@ -7,6 +14,7 @@ def add(new_ticker, new_tags):
 
 
 def remove(old_ticker):
+
     pass
 
 
