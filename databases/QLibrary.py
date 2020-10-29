@@ -1,74 +1,35 @@
-import csv
 import pandas as pd
-import json
-from multipledispatch import dispatch
-
-
-class QRange:
-    @dispatch(list)
-    def __init__(self, buttons):
-        self.type_range = "buttons"
-        self.buttons = buttons
-
-    @dispatch(int, int)
-    def __init__(self, i, j):
-        self.type_range = "slider"
-        self.i = i
-        self.j = j
-
-    @dispatch()
-    def __init__(self):
-        self.type_range = "user_value"
-
-
-class Question:
-    def __init__(self, question: str, ran: QRange):
-        self.question: str = question
-        self.ran: QRange = ran
-
-
-class QSet:
-    @dispatch(str, int, list)
-    def __init__(self, name, priority, ques):
-        self.ques: list = ques
-        self.name: str = name
-        self.priority: int = priority
-
-    @dispatch(str, int)
-    def __init__(self, name, priority):
-        self.name: str = name
-        self.priority: int = priority
 
 
 class QLibrary:
     def __init__(self):
-        df = pd.read_csv("questions.csv")
+        self.questions = pd.read_pickle("questions.pkl")
+        self.col = self.questions.columns
+        self.index = 0
 
-    def add(self, qset):
-        pass
+    def add(self, rank: int, question: str, options: str):
+        options = options.strip().split()
+        row = [rank, question, options]
+        df = dict(zip(self.col, row))
+        self.questions = self.questions.append(df, ignore_index=True)
 
-    def replace(self, qset_name, old_question, new_question, new_range):
-        pass
+    def remove_single(self, question: str):
+        self.questions.drop(self.questions[self.col[1]] == question)
 
-    def find(self, question):
-        pass
+    def remove(self, question_list: list):
+        for x in question_list:
+            self.remove(x)
+
+    def find(self, question: str) -> list:
+        return self.questions[self.col[1]] == question
+
+    def replace(self, old_questions: list, rank: int, new_question: str, options: str):
+        self.remove(old_questions)
+        self.add(rank, new_question, options)
 
     def display(self):
-        pass
+        return self.questions.to_dict()
 
-    @dispatch(str)
-    def remove(self, question):
-        pass
-
-    @dispatch(QSet)
-    def remove(self, question):
-        pass
-
-    def exists(self):
-        pass
-
-    def clear(self, passkey):
-        pass
-
-    def modify(self, question, new_options):
-        pass
+    def done(self):
+        df = self.questions.drop_duplicates(subset=self.col[1])
+        df.to_pickle("questions.pkl")
