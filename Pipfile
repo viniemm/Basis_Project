@@ -6,10 +6,14 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-yfinance = "*"
-matplotlib = "*"
+yfinance = "~=0.1.55"
+matplotlib = "~=3.2"
 multipledispatch = "*"
-ffn = "*"
+ffn = "~=0.3.4"
+tqdm = "*"
+pandas = "~=1.1.3"
+numpy = "~=1.19.2"
+regex = "*"
 
 [requires]
 python_version = "3.8"
