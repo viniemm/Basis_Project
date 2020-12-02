@@ -12,16 +12,28 @@ import os
 
 def mail(address: str, filename: str):
     receiver = address
-    body = "Hello there from BASIS"
+    body = "Your portfolio is attached as a csv file. Open in google sheets to track"
     this_folder = os.path.dirname(os.path.abspath(__file__))
     my_file = os.path.join(this_folder, filename)
-    yag = yagmail.SMTP("vinipy2020@gmail.com")
-    yag.send(
-        to=receiver,
-        subject="Yagmail test with attachment",
-        contents=body,
-        attachments=my_file,
-    )
+    df = pd.read_csv(my_file)
+    col = list()
+    for x in range(1, len(df)+1):
+        col.append("=GOOGLEFINANCE(A"+str(x+1)+", \"PRICE\")")
+    df.insert(1, "cmp", col)
+    df.to_csv(my_file, index=False)
+    try:
+        yag = yagmail.SMTP("vinipy2020@gmail.com")
+        yag.send(
+            to=receiver,
+            subject="BASIS Project Stock Report",
+            contents=body,
+            attachments=my_file,
+        )
+    except yagmail.error.YagInvalidEmailAddress:
+        print("Invalid Email")
+    df = pd.read_csv(my_file)
+    df = df.drop(["cmp"], axis=1)
+    df.to_csv(my_file, index=False)
 
 
 

@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import ffn
 from databases import DTable, Mailer
 import json
+import pandas as pd
 
 __version__ = 1.3
 __author__ = "Vinayak Mathur"
@@ -90,7 +91,9 @@ while j:
             Mailer.mail(em, port_name + ".csv")
 
         elif i == "db":
-            print(dt.all())
+            df = dt.all()
+            with pd.option_context("display.max_rows", None):
+                print(df)
         elif i == "port":
             dt.done()
             n = False
