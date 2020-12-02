@@ -45,11 +45,9 @@ def granted():
         def start():
             inp = input("""
                     What would you like to do today?
-                    Stock Screener: sc
                     Get info about a stock: get
                     Add tickers to database: add
                     Remove tickers from database: rm
-                    Replace tickers in database: rp
                     View entire database: db
                     Exit: exit
                     """)
@@ -64,22 +62,17 @@ def granted():
                 except IndexError:
                     print("No tags entered")
 
-            if inp == "sc":
-                tags = input("Enter in the format: cond1&cond2|cond3&cond4")
-                tags = to_div(tags)
-                stk = dt.screen(tags)
-                stocks = dt.get(stk)
-                print(pd.DataFrame(stocks))
-                # tb.show(pd.DataFrame(stocks))
-                pl(stk)
-                start()
-            elif inp == "get":
-                stocks = input("Enter the stocks separated by space: ")
-                stocks = dt.get(to_list(stocks))
-                print(stocks)
-                stocks = stocks["symbol"]
-                pl(stocks)
-                start()
+            if inp == "get":
+                try:
+                    stocks = input("Enter the stocks separated by space: ")
+                    stocks = dt.get(to_list(stocks))
+                    print(stocks)
+                    stocks = stocks["symbol"]
+                    pl(stocks)
+                    start()
+                except KeyError:
+                    print("One of the stocks you entered is not in the database")
+                    start()
             elif inp == "add":
                 stocks = input("Enter the stocks to be added separated by space: ")
                 stocks = dt.add(to_list(stocks))
@@ -89,13 +82,6 @@ def granted():
                 stocks = input("Enter the stocks to be removed separated by space: ")
                 stocks = dt.remove(to_list(stocks))
                 print(stocks)
-                start()
-            elif inp == "rp":
-                stocks1 = input("Enter the stocks to be added separated by space: ")
-                stocks1 = dt.remove(to_list(stocks1))
-                stocks2 = input("Enter the stocks to be removed separated by space: ")
-                stocks2 = dt.remove(to_list(stocks2))
-                print(dt.replace(stocks2, stocks1))
                 start()
             elif inp == "db":
                 stocks = dt.all()

@@ -1,0 +1,3 @@
+name,email,password,stockinfo
+"Vinayak Mathur",vxm167@case.edu,admin,"SHOP:1|200,AAPL:2|100,SNE:3|90,ATVI:6|55,DOCU:1|200,PTON:1|100"
+"Jeff Bezos",jeff@amazon.com,bigmoney,"AMZN:1000|1000"

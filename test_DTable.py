@@ -1,6 +1,6 @@
 import unittest
 
-import DTable.DTable as DTable
+from databases.DTable import DTable
 
 
 class TestDTable(unittest.TestCase):
@@ -26,3 +26,7 @@ class TestDTable(unittest.TestCase):
         dt = DTable()
         dt.sub_done()
         dt.done()
+
+
+# if __name__ == "__main__":
+#     unittest.main()

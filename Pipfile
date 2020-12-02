@@ -14,6 +14,7 @@ tqdm = "*"
 pandas = "~=1.1.3"
 numpy = "~=1.19.2"
 regex = "*"
+dtable = "*"
 
 [requires]
 python_version = "3.8"
