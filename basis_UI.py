@@ -1,22 +1,13 @@
 print("Loading...")
-""
 
 import pandas as pd
-# import tkinter as tk
 import matplotlib.pyplot as plt
 import ffn
-# import yfinance
-from tabulate import tabulate
 from databases import DTable
-from tqdm import tqdm
-# import time
 from getpass import getpass
 
-# import tabloo as tb
+# cd .virtualenvs/Basis_Project-yFGBk4L_/scripts && source activate && cd ../../../documents/basis_project && python basis_ui.py
 
-"""
-cd .virtualenvs/Basis_Project-yFGBk4L_/scripts && source activate && cd ../../../documents/basis_project && python basis_ui.py
-"""
 
 print("""
 ██████╗  █████╗ ███████╗██╗███████╗    ██████╗ ██████╗  ██████╗      ██╗███████╗ ██████╗████████╗
@@ -27,11 +18,11 @@ print("""
 ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝╚══════╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚════╝ ╚══════╝ ╚═════╝   ╚═╝
 
 """)
-print("""Welcome to the BASIS Project by Vini Mathur.""")
+print("Welcome to the BASIS Project by Vini Mathur.")
 print("""
 BASIS is a recursive acronym that stands for BASIS Automated Stock Investment Software.
 More information about BASIS can be found at https://github.com/viniemm/Basis_Project.
-Please enter username and password.\n
+Enter login or register.\n
 """)
 
 
@@ -42,13 +33,20 @@ def granted():
         def to_list(s: str) -> list:
             return s.strip().split()
 
+        def to_div(s: str) -> list:
+            result = list()
+            s = s.strip().split("|")
+            for n in s:
+                result.append(n.strip().split("&"))
+            return result
+
         dt = DTable.DTable()
 
         def start():
             inp = input("""
                     What would you like to do today?
                     Stock Screener: sc
-                    Get info about a stock: stock
+                    Get info about a stock: get
                     Add tickers to database: add
                     Remove tickers from database: rm
                     Replace tickers in database: rp
@@ -67,18 +65,17 @@ def granted():
                     print("No tags entered")
 
             if inp == "sc":
-                tags = input("Enter the tags separated by space: ")
-                # tags = to_list(tags)
+                tags = input("Enter in the format: cond1&cond2|cond3&cond4")
+                tags = to_div(tags)
                 stk = dt.screen(tags)
                 stocks = dt.get(stk)
                 print(pd.DataFrame(stocks))
                 # tb.show(pd.DataFrame(stocks))
                 pl(stk)
                 start()
-            elif inp == "stock":
+            elif inp == "get":
                 stocks = input("Enter the stocks separated by space: ")
                 stocks = dt.get(to_list(stocks))
-                stocks = pd.DataFrame(stocks)
                 print(stocks)
                 stocks = stocks["symbol"]
                 pl(stocks)
@@ -102,7 +99,6 @@ def granted():
                 start()
             elif inp == "db":
                 stocks = dt.all()
-                print(stocks)
                 start()
             elif inp == "exit":
                 print("Exiting")
