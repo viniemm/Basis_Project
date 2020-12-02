@@ -3,20 +3,34 @@ import ffn
 import yfinance as yf
 import pandas as pd
 from datetime import date
+from tabulate import tabulate
+import os
+from reportlab.lib.pagesizes import letter
 
 
-class Report:
-    def __init__(self, portfolio: list, username: str):
-        filename = username + "-portfolio-analysis_" + str(date.today()) + ".pdf"
-        self.pdf = canvas.Canvas(filename)
-        documentTitle = username + " Basis Project Portfolio Analysis (" + str(date.today()) + ")"
-        self.pdf.setTitle(documentTitle)
-        self.pdf.drawString(270, 770, documentTitle)
-        self.complete()
-        pass
+def generate_pdf(portfolio=pd.DataFrame([]), username="test"):
+    filename = username + "-portfolio-analysis_" + str(date.today()) + ".pdf"
+    out_file_dir = '\\'.join(os.path.dirname(__file__).split("/"))
+    out_file_path = os.path.join(out_file_dir, filename)
+    print("RUN")
+    width, height = letter
+    pdf = canvas.Canvas(out_file_path, pagesize=letter)
+    pdf.setFont("Times-Roman", 12)
+    documentTitle = username + " Basis Project Portfolio Analysis (" + str(date.today()) + ")"
+    pdf.setTitle(documentTitle)
+    pdf.drawString(0, height-20, documentTitle)
+    pdf.setFont("Times-Bold", 24)
+    pdf.drawCentredString(width/2, height-80, "BASIS Project Portfolio Report")
+    pdf.setFont("Times-Roman", 12)
+    s = str(portfolio)
+    pdf.drawString(20, 500, s)
+    pdf.showPage()
+    pdf.save()
+    pass
 
-    def complete(self):
-        self.pdf.save()
-
-
-rp = Report([], "vini")
+#
+# print(__name__)
+#
+# if __name__ == "__main__":
+#
+#     generate_pdf()

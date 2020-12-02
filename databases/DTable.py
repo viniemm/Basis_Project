@@ -11,7 +11,7 @@ class DTable:
 
     def __init__(self, fname="BasisDB"):
         self.fname = fname + ".csv"
-        print(self.fname)
+        print("opened " + self.fname)
         this_folder = os.path.dirname(os.path.abspath(__file__))
         self.my_file = os.path.join(this_folder, self.fname)
         t = os.path.exists(self.my_file)
@@ -50,9 +50,9 @@ class DTable:
     # subroutine for add() (FINAL READY)
 
     def __add_single(self, new_ticker: str):
-        j = True
+        j = "Success"
         try:
-            if new_ticker not in self.sym:
+            if new_ticker.upper() not in self.sym:
                 stk = yf.Ticker(new_ticker).info
                 row = list()
                 for field in self.col:
@@ -61,7 +61,7 @@ class DTable:
                 self.db = self.db.append(df, ignore_index=True)
                 self.sub_done()
         except:
-            j = False
+            j = "Failed"
         return j
 
     # addition of a new row (FINAL READY)
@@ -72,8 +72,8 @@ class DTable:
             t = trange(len(tickers), desc='Bar desc', leave=True)
             for i in t:
                 t.set_description(tickers[i] + ": " + str(i))
-                t.refresh()
                 result.append(self.__add_single(tickers[i]))
+                t.refresh()
                 self.done()
             return result
         except AttributeError:

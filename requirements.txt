@@ -7,3 +7,4 @@ tqdm~=4.51.0
 future~=0.18.2
 tabulate~=0.8.7
 tabloo~=0.0.13
+reportlab~=3.5.55

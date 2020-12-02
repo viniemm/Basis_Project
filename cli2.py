@@ -1,9 +1,12 @@
 print("Loading...")
 
-
 import matplotlib.pyplot as plt
 import ffn
-from databases import DTable
+from databases import DTable, Mailer
+import json
+
+__version__ = 1.3
+__author__ = "Vinayak Mathur"
 
 
 def pl(ans, st="2020-01-01"):
@@ -15,6 +18,8 @@ def pl(ans, st="2020-01-01"):
     except IndexError:
         print("No tags entered")
 
+
+# cd .virtualenvs/Basis_Project-yFGBk4L_/scripts && source activate && cd ../../../documents/basis_project
 
 print("""
 ██████╗  █████╗ ███████╗██╗███████╗    ██████╗ ██████╗  ██████╗      ██╗███████╗ ██████╗████████╗
@@ -32,42 +37,58 @@ More information about BASIS can be found at https://github.com/viniemm/Basis_Pr
 """)
 
 instructions = """
-    Here are instructions to manage the database.
+usage: basis [--version] [--help] [--author] [--info]
+
+
+Here are some basic commands
     
-    add: Add stocks to the database.
-    rm: Remove stocks from the database.
-    get: Get info about a stock(s).
-    an: View analysis.
-    db: view entire database.
-    port: Change portfolio
-    exit: To exit
-    help: Show instructions
-    """
+    add    Add stocks to the database.
+    rm     Remove stocks from the database.
+    get    Get info about a stock(s).
+    an     View analysis.
+    db     View entire database.
+    port   Change portfolio
+    exit   Exit    
+"""
 
 j = True
 while j:
-    inp = input("Enter the portfolio name. Enter nothing for main database\n")
-    if inp == "":
+    port_name = input("Enter the portfolio name. Enter nothing for main database\n")
+    if port_name == "":
         dt = DTable.DTable()
     else:
-        dt = DTable.DTable(inp)
+        dt = DTable.DTable(port_name)
     print(instructions)
     n = True
     while n:
-        i = input()
+        inp = input(port_name + " $ ").split()
+        i = inp[0]
         if i == "port":
             n = False
         elif i == "add":
-            inp = input("add: ")
-            inp = inp.split()
-            dt.add(inp)
+            if len(inp) > 1:
+                ls = inp[1:]
+                ver = dt.add(inp[1:])
+                dictionary = dict(zip(ls, ver))
+                print(json.dumps(dictionary, indent=4, sort_keys=True))
+
+        elif i == "rm":
+            if len(inp) > 1:
+                dt.remove(inp[1:])
         elif i == "get":
-            inp = input("get: ")
-            ans = dt.get(inp.split())
-            print(ans)
-            pl(ans["symbol"].tolist())
+            if len(inp) > 1:
+                ans = dt.get(inp[1:])
+                print(ans)
+                try:
+                    pl(ans["symbol"].tolist())
+                except KeyError:
+                    print(inp[1] + " was not found in the portfolio.")
+                    print("To add the stock to the portfolio do: " + inp[1])
         elif i == "an":
-            print("Still in production.")
+            # Report.generate_pdf(dt.all(), port_name)
+            em = input("Enter email address: ")
+            Mailer.mail(em, port_name + ".csv")
+
         elif i == "db":
             print(dt.all())
         elif i == "port":
@@ -79,5 +100,14 @@ while j:
             j = False
         elif i == "help":
             print(instructions)
+        elif i == "basis":
+            con = inp[1]
+            if con == "--help":
+                print(instructions)
+            elif con == "--version":
+                print("BASIS version" + str(__version__))
+            elif con == "--author":
+                print(__author__)
         else:
             print("Invalid input...")
+            print("see help")
