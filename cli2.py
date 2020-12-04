@@ -13,6 +13,8 @@ __author__ = "Vinayak Mathur"
 def pl(ans, st="2020-01-01"):
     try:
         price = ffn.get(ans, start=st)
+        with pd.option_context("display.max_rows", None):
+            print(price)
         price.rebase().plot(figsize=(10, 5))
         plt.draw()
         plt.show(block=False)
@@ -43,11 +45,11 @@ usage: basis [--version] [--help] [--author] [--info]
 
 Here are some basic commands
     
-    add    Add stocks to the database.
-    rm     Remove stocks from the database.
+    add    Add stocks to the portfolio.
+    rm     Remove stocks from the portfolio.
     get    Get info about a stock(s).
-    an     View analysis.
-    db     View entire database.
+    ml     Mail portfolio.
+    db     View entire portfolio.
     port   Change portfolio
     exit   Exit    
 """
@@ -63,7 +65,11 @@ while j:
     n = True
     while n:
         inp = input(port_name + " $ ").split()
-        i = inp[0]
+        try:
+            i = inp[0]
+        except IndexError:
+            inp = ["basis", "--help"]
+            i = inp[0]
         if i == "port":
             n = False
         elif i == "add":
@@ -81,11 +87,16 @@ while j:
                 ans = dt.get(inp[1:])
                 print(ans)
                 try:
-                    pl(ans["symbol"].tolist())
+                    stdate = input("Enter start date (yyyy--mm--dd). Leave blank for YTD: ")
+                    print(stdate)
+                    if stdate == "":
+                        pl(ans["symbol"].tolist())
+                    else:
+                        pl(ans["symbol"].tolist(), stdate)
                 except KeyError:
                     print(inp[1] + " was not found in the portfolio.")
-                    print("To add the stock to the portfolio do: " + inp[1])
-        elif i == "an":
+                    print("To add the stock to the portfolio do: get " + inp[1])
+        elif i == "ml":
             # Report.generate_pdf(dt.all(), port_name)
             em = input("Enter email address: ")
             Mailer.mail(em, port_name + ".csv")
@@ -93,7 +104,10 @@ while j:
         elif i == "db":
             df = dt.all()
             with pd.option_context("display.max_rows", None):
-                print(df)
+                if df.empty is False:
+                    print(df)
+                else:
+                    print("No stocks currently in portfolio " + port_name)
         elif i == "port":
             dt.done()
             n = False
@@ -111,6 +125,11 @@ while j:
                 print("BASIS version" + str(__version__))
             elif con == "--author":
                 print(__author__)
+            elif con == "--info":
+                print("""
+                BASIS is a recursive acronym that stands for BASIS Automated Stock Investment Software.
+                More information about BASIS can be found at https://github.com/viniemm/Basis_Project.
+                """)
         else:
             print("Invalid input...")
-            print("see help")
+            print("see basis --help")
