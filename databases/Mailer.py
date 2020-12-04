@@ -17,8 +17,8 @@ def mail(address: str, filename: str):
     my_file = os.path.join(this_folder, filename)
     df = pd.read_csv(my_file)
     col = list()
-    for x in range(1, len(df)+1):
-        col.append("=GOOGLEFINANCE(A"+str(x+1)+", \"PRICE\")")
+    for x in range(1, len(df) + 1):
+        col.append("=GOOGLEFINANCE(A" + str(x + 1) + ", \"PRICE\")")
     df.insert(1, "cmp", col)
     df.to_csv(my_file, index=False)
     try:
@@ -29,53 +29,55 @@ def mail(address: str, filename: str):
             contents=body,
             attachments=my_file,
         )
+        df = pd.read_csv(my_file)
+        df = df.drop(["cmp"], axis=1)
+        df.to_csv(my_file, index=False)
+        return True
     except yagmail.error.YagInvalidEmailAddress:
         print("Invalid Email")
-    df = pd.read_csv(my_file)
-    df = df.drop(["cmp"], axis=1)
-    df.to_csv(my_file, index=False)
+        df = pd.read_csv(my_file)
+        df = df.drop(["cmp"], axis=1)
+        df.to_csv(my_file, index=False)
+        return False
 
 
-
-
-
-def old_mail(address: str, filename: str):
-    password = getpass("Key: ")
-    port = 465  # For SSL
-
-    sender_email = "vinipy2020@gmail.com"
-    receiver_email = address
-    subject = "An email with attachment from Python"
-    body = "This is an email with attachment sent from Python"
-    message = MIMEMultipart()
-    message["From"] = sender_email
-    message["To"] = receiver_email
-    message["Subject"] = subject
-    message["Bcc"] = receiver_email
-    message.attach(MIMEText(body, "plain"))
-
-    with open(filename, "rb") as attachment:
-        # Add file as application/octet-stream
-        # Email client can usually download this automatically as attachment
-        part = MIMEBase("application", "octet-stream")
-        part.set_payload(attachment.read())
-
-    # Encode file in ASCII characters to send by email
-    encoders.encode_base64(part)
-
-    # Add header as key/value pair to attachment part
-    part.add_header(
-        "Content-Disposition",
-        f"attachment; filename= {filename}",
-    )
-
-    # Add attachment to message and convert message to string
-    message.attach(part)
-    text = message.as_string()
-
-    # Create a secure SSL context
-    context = ssl.create_default_context()
-
-    with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-        server.login("vinipy2020@gmail.com", password)
-        server.sendmail(sender_email, receiver_email, message)
+# def old_mail(address: str, filename: str):
+#     password = getpass("Key: ")
+#     port = 465  # For SSL
+#
+#     sender_email = "vinipy2020@gmail.com"
+#     receiver_email = address
+#     subject = "An email with attachment from Python"
+#     body = "This is an email with attachment sent from Python"
+#     message = MIMEMultipart()
+#     message["From"] = sender_email
+#     message["To"] = receiver_email
+#     message["Subject"] = subject
+#     message["Bcc"] = receiver_email
+#     message.attach(MIMEText(body, "plain"))
+#
+#     with open(filename, "rb") as attachment:
+#         # Add file as application/octet-stream
+#         # Email client can usually download this automatically as attachment
+#         part = MIMEBase("application", "octet-stream")
+#         part.set_payload(attachment.read())
+#
+#     # Encode file in ASCII characters to send by email
+#     encoders.encode_base64(part)
+#
+#     # Add header as key/value pair to attachment part
+#     part.add_header(
+#         "Content-Disposition",
+#         f"attachment; filename= {filename}",
+#     )
+#
+#     # Add attachment to message and convert message to string
+#     message.attach(part)
+#     text = message.as_string()
+#
+#     # Create a secure SSL context
+#     context = ssl.create_default_context()
+#
+#     with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+#         server.login("vinipy2020@gmail.com", password)
+#         server.sendmail(sender_email, receiver_email, message)

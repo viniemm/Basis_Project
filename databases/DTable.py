@@ -117,11 +117,13 @@ class DTable:
         self.db = self.db.drop_duplicates("symbol")
         self.db = self.db.sort_values("symbol")
         self.db.to_csv(self.my_file, index=False)
+        return True
 
     # IMPORTANT sub_done after every addition/removal (FINAL READY)
 
     def sub_done(self):
         self.db.to_csv(self.my_file, index=False)
+        return True
 
 
 # dt = DTable()
